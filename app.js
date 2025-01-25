@@ -18,9 +18,10 @@ const middleware = [
 
 app.use(middleware);
 app.get("/", (req, res) => {
-  res.json({
-    message: "working",
-  });
+  // res.json({
+  //   message: "working",
+  // });
+  res.render("pages/auth/signup");
 });
 app.listen(PORT, () => {
   console.log(`app is running on port ${PORT}`);
