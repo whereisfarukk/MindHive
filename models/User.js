@@ -1,6 +1,6 @@
 // name ,email,password ,profile
 const { Schema, model } = require("mongoose");
-const Profile = require("./Profile");
+// const Profile = require("./Profile");
 const userSchema = new Schema(
   {
     name: {
@@ -22,7 +22,7 @@ const userSchema = new Schema(
     profile: {
       // Reference to the User schema
       type: Schema.Types.ObjectId,
-      ref: Profile, // it points to the Profile model
+      ref: "Profile", // it points to the Profile model
 
       // we are not making it required cause a profile can't be created before creating User
     },
