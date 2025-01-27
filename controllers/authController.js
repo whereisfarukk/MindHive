@@ -1,17 +1,19 @@
 const User = require("../models/User");
-
+const bcrypt = require("bcrypt");
 exports.signupGetController = (req, res, next) => {
   res.render("pages/auth/signup");
 };
 exports.signupPostController = async (req, res, next) => {
   let { username, email, password } = req.body;
 
-  let user = new User({
-    name: username,
-    email,
-    password,
-  });
   try {
+    let hashedPassword = await bcrypt.hash(password, 10);
+    let user = new User({
+      name: username,
+      email,
+      password: hashedPassword,
+    });
+
     let createUser = await user.save();
     console.log("user created successfully", createUser);
     res.render("pages/auth/signup");
@@ -22,7 +24,33 @@ exports.signupPostController = async (req, res, next) => {
   // console.log(req.body);
   // res.render("pages/auth/signup");
 };
-exports.loginGetController = (req, res, next) => {};
-exports.loginPostController = (req, res, next) => {};
+exports.loginGetController = (req, res, next) => {
+  res.render("pages/auth/login");
+};
+exports.loginPostController = async (req, res, next) => {
+  let { email, password } = req.body;
+  try {
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res.json({
+        message: "Invalid credential",
+      });
+    }
+
+    let match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      return res.json({
+        message: "Invalid credential",
+      });
+    }
+    console.log("successfully loged in ", user);
+    res.render("pages/auth/login");
+  } catch (e) {
+    console.log(e);
+    next(e);
+  }
+
+  console.log(req.body);
+};
 
 exports.logoutControlle = (req, res, next) => {};
