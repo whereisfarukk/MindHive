@@ -13,7 +13,7 @@ const signupValidator = [
     .isLength({ min: 2, max: 15 })
     .withMessage("Username Must Be Between 2 to 15 Characters")
     .custom(async (username) => {
-      let user = await User.findOne({ username });
+      let user = await User.findOne({ name: username });
       if (user) {
         return Promise.reject("Username Already Used");
       }
@@ -36,6 +36,7 @@ const signupValidator = [
     if (confirmPassword != req.body.password) {
       throw new Error("Password Does not Match");
     }
+    return true;
   }),
 ];
 router.get("/signup", signupGetController);
