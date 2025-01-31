@@ -17,9 +17,14 @@
             id="username"
             name="username"
             placeholder="Enter your username"
+            value="<%= oldInput ? oldInput.username : '' %>"
             required
           />
+          <% if ( error.username) { %>
+          <small class="error"><%= error.username %></small>
+          <% } %>
         </div>
+
         <div class="form-group">
           <label for="email">Email</label>
           <input
@@ -27,9 +32,14 @@
             id="email"
             name="email"
             placeholder="Enter your email"
+            value="<%= oldInput ? oldInput.email : '' %>"
             required
           />
+          <% if (error && error.email) { %>
+          <small class="error"><%= error.email %></small>
+          <% } %>
         </div>
+
         <div class="form-group">
           <label for="password">Password</label>
           <input
@@ -39,20 +49,28 @@
             placeholder="Enter your password"
             required
           />
+          <% if (error && error.password) { %>
+          <small class="error"><%= error.password %></small>
+          <% } %>
         </div>
 
         <div class="form-group">
           <label for="confirmPassword">Confirm Password</label>
           <input
             type="password"
-            id="password"
+            id="confirmPassword"
             name="confirmPassword"
             placeholder="Enter password again"
             required
           />
+          <% if (error && error.confirmPassword) { %>
+          <small class="error"><%= error.confirmPassword %></small>
+          <% } %>
         </div>
+
         <button type="submit" class="signup-btn">Sign Up</button>
       </form>
+
       <div class="login-link">
         <p>Already have an account? <a href="#">Log in</a></p>
       </div>
