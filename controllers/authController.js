@@ -39,13 +39,11 @@ exports.signupPostController = async (req, res, next) => {
   // res.render("pages/auth/signup");
 };
 exports.loginGetController = (req, res, next) => {
-  let isLoggedIn = req.get("Cookie").includes("isLoggedIn=true") ? true : false;
-
-  res.render("pages/auth/login", { isLoggedIn });
+  console.log(req.session);
+  res.render("pages/auth/login");
 };
 exports.loginPostController = async (req, res, next) => {
   let { email, password } = req.body;
-  let isLoggedIn = req.get("Cookie").includes("isLoggedIn=true") ? true : false;
   try {
     let user = await User.findOne({ email });
     if (!user) {
@@ -60,9 +58,10 @@ exports.loginPostController = async (req, res, next) => {
         message: "Invalid credential",
       });
     }
-    res.setHeader("Set-Cookie", "isLoggedIn=true");
+    req.session.isLoggedIn = true;
+    req.session.user = user;
     console.log("successfully loged in ", user);
-    res.render("pages/auth/login", { isLoggedIn });
+    res.render("pages/auth/login");
   } catch (e) {
     console.log(e);
     next(e);
