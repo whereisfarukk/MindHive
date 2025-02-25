@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 8080;
 
 // Import routes
 const authRoute = require("./routes/authRoute");
+const dashboardRoute = require("./routes/dashboardRoute");
 
 // Import middleware
 const { bindUserWithRequest } = require("./middleware/authMiddleWare");
@@ -43,6 +44,7 @@ const middleware = [
 
 app.use(middleware);
 app.use("/auth", authRoute);
+app.use("/dashboard", dashboardRoute);
 app.get("/", (req, res) => {
   res.json({
     message: "working",
