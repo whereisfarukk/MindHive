@@ -15,3 +15,11 @@ exports.bindUserWithRequest = () => {
     }
   };
 };
+
+exports.isAuthenticated = (req, res, next) => {
+  // console.log("user object", req.user.isLoggedIn);
+  if (!req.session.isLoggedIn) {
+    return res.redirect("auth/login");
+  }
+  next();
+};
