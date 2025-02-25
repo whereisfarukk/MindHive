@@ -10,6 +10,11 @@ const PORT = process.env.PORT || 8080;
 // Import routes
 const authRoute = require("./routes/authRoute");
 
+// Import middleware
+const { bindUserWithRequest } = require("./middleware/authMiddleWare");
+const setLocals = require("./middleware/setLocals");
+
+//Saving sessions
 const store = new MongoDBStore({
   uri: "mongodb+srv://omarf6197:HTDEFnAfAP5PyOuv@cluster0.pszaf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
   collection: "sessions",
@@ -32,6 +37,8 @@ const middleware = [
     saveUninitialized: false,
     store: store,
   }),
+  bindUserWithRequest(),
+  setLocals(),
 ];
 
 app.use(middleware);
