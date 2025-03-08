@@ -60,8 +60,13 @@ exports.loginPostController = async (req, res, next) => {
     }
     req.session.isLoggedIn = true;
     req.session.user = user;
-    console.log("successfully loged in ", user);
-    res.render("pages/auth/login");
+    // console.log("successfully loged in ", user);
+    // res.render("pages/auth/login");
+    req.session.save((err) => {
+      console.log(err);
+      return next(err);
+    });
+    res.redirect("/dashboard");
   } catch (e) {
     console.log(e);
     next(e);
@@ -70,4 +75,12 @@ exports.loginPostController = async (req, res, next) => {
   console.log(req.body);
 };
 
-exports.logoutControlle = (req, res, next) => {};
+exports.logoutControlle = (req, res, next) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.log(err);
+      return next(err);
+    }
+    return res.redirect("/auth/login");
+  });
+};
