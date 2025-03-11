@@ -1,3 +1,7 @@
 {
-  "conventionalCommits.scopes": ["Added cookies ", "Session added"]
+  "conventionalCommits.scopes": ["Added cookies ", "Session added"],
+  // Here you can add custom style
+  "vscode_custom_css.imports": [
+    "file:///C:/Users/omarf/custom-vscode/custom-vscode.css"
+  ]
 }
