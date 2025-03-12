@@ -21,6 +21,18 @@ setMiddleWare(app);
 // Using Routes from Route Directory
 setRoutes(app);
 
+// if anywhere any error occurs ,this route will execute.If any invalid route hit will execute this.
+app.use((req, res, next) => {
+  let error = new Error("404 page not found");
+  error.status = 404;
+  next(error);
+});
+app.use((error, req, res, next) => {
+  if (error.status === 404) {
+    return res.render("pages/error/404");
+  }
+  return res.render("pages/error/500");
+});
 mongoose
   .connect(
     `mongodb+srv://${process.env.DB_ADMIN}:${process.env.DB_PASSWORD}@cluster0.pszaf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`

@@ -1,14 +1,73 @@
-### Why Used Sessions:
+# 🚀 `app.use()` vs `app.get()` in Express
 
-1. **User Authentication**: Sessions allow you to keep track of a user’s login state across multiple requests. This is crucial for authentication, as once a user logs in, you want to remember their session so that they don't have to authenticate again on every request.
-2. **Security**: With sessions, sensitive user information (like their logged-in state) is stored server-side, while the client only holds a session identifier (stored in a cookie). This adds an extra layer of security compared to storing sensitive data directly in the client.
-3. **User State**: Sessions help in maintaining user-specific data across requests, such as their logged-in status, preferences, or any other user-specific data that needs to persist throughout the session without re-submitting login credentials.
+## 1️⃣ **When to Use `app.use()` vs `app.get()`**
 
-### How You Used Sessions:
+| Scenario                                | Use `app.use()`                     | Use `app.get()`                         |
+| --------------------------------------- | ----------------------------------- | --------------------------------------- |
+| **Mounting Routers**                    | ✅ `app.use("/dashboard", router);` | ❌ Not suitable                         |
+| **Middleware (logging, auth, etc.)**    | ✅ `app.use(someMiddleware);`       | ❌ Not suitable                         |
+| **Handling subroutes (`/dashboard/*`)** | ✅ `app.use("/dashboard", router);` | ❌ Use `app.get("/:subpath")` in router |
+| **Strict path matching**                | ❌ Avoid for specific paths         | ✅ `app.get("/dashboard", handler);`    |
+|  |
 
-1. **Session Store**: You set up a `MongoDBStore` to store session data in a MongoDB database. This ensures that the session information is persistent and can be shared across different instances of the application if necessary (e.g., in a scaled environment). The session expires after 2 hours of inactivity.
-2. **Session Middleware**: You integrated the `express-session` middleware in the middleware array. This middleware handles the creation and management of sessions, saving the session ID to the user's cookies.
-3. **Session Data**: When a user logs in successfully, their session is updated with `req.session.isLoggedIn = true` and their user data is stored in `req.session.user`. This allows you to check the user's login state across different routes.
-4. **Session Expiration**: The session will automatically expire after 2 hours of inactivity (as configured), helping manage user sessions securely by limiting the duration of time a session remains active.
+### 🔹 `app.use()`
 
-Overall, by using sessions, we enable a more secure, scalable, and user-friendly way of managing user authentication and state.
+```js
+app.use("/dashboard", dashboardRoute);
+```
+
+✅ Matches:
+
+- `/dashboard`
+- `/dashboard/anything` (if `dashboardRoute` supports it)
+
+### 🔹 `app.get()`
+
+```js
+app.get("/dashboard", (req, res) => {
+  res.json({ message: "Dashboard Home" });
+});
+```
+
+✅ Matches: `/dashboard`
+❌ Does NOT match: `/dashboard/anything`
+
+## 2️⃣ Why Does / Get Executed for Unknown Routes?
+
+**Your setup**:
+
+```js
+const route = [
+  { path: "/auth", handler: authRoute },
+  { path: "/dashboard", handler: dashboardRoute },
+  { path: "/", handler: (req, res) => res.json({ message: "working" }) },
+];
+
+module.exports = (app) => {
+  route.forEach((r) => app.use(r.path, r.handler));
+};
+```
+
+- If **`/dashboard/anything`** is not found in **`dashboardRoute`**, Express moves to the next route.
+- Since **`/`** is a catch-all route, it executes the **`/`** handler instead.
+
+## 3️⃣ How to Fix It?
+
+**Add a 404 handler at the end:**
+
+```js
+module.exports = (app) => {
+  route.forEach((r) => app.use(r.path, r.handler));
+
+  // 404 Middleware
+  app.use((req, res) => res.status(404).json({ error: "Route not found" }));
+};
+```
+
+✅ Now, unknown routes like `/dashboard/anything` return:
+
+```js
+{ "error": "Route not found" }
+```
+
+Instead of `{ "message": "working" }`.

@@ -63,10 +63,12 @@ exports.loginPostController = async (req, res, next) => {
     // console.log("successfully loged in ", user);
     // res.render("pages/auth/login");
     req.session.save((err) => {
-      console.log(err);
-      return next(err);
+      if (err) {
+        console.log(err);
+        return next(err); // Pass error to Express error handler
+      }
+      res.redirect("/dashboard"); // Only redirect after session is saved
     });
-    res.redirect("/dashboard");
   } catch (e) {
     console.log(e);
     next(e);
