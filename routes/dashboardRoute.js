@@ -1,9 +1,22 @@
 const router = require("express").Router();
 const {
   dashboardGetController,
+  createProfileGetController,
+  createProfilePostController,
+  editProfileGetController,
+  editProfilePostController,
 } = require("../controllers/dashboardController");
+const upload = require("../middleware/uploadMiddleware");
 const { isAuthenticated } = require("../middleware/authMiddleWare");
 
 router.get("/", isAuthenticated, dashboardGetController);
+router.get("/create-profile", isAuthenticated, createProfileGetController);
+router.post(
+  "/create-profile",
+  upload.single("profilepic"),
+  createProfilePostController
+);
+// router.get("/edit-profile");
+// router.post("/edit-profile");
 
 module.exports = router;

@@ -1,73 +1,23 @@
-# 🚀 `app.use()` vs `app.get()` in Express
+## Key Difference Between `extName` and `mimeType`
 
-## 1️⃣ **When to Use `app.use()` vs `app.get()`**
+The key difference between `extName` and `mimeType` in your code is how they determine the file type:
 
-| Scenario                                | Use `app.use()`                     | Use `app.get()`                         |
-| --------------------------------------- | ----------------------------------- | --------------------------------------- |
-| **Mounting Routers**                    | ✅ `app.use("/dashboard", router);` | ❌ Not suitable                         |
-| **Middleware (logging, auth, etc.)**    | ✅ `app.use(someMiddleware);`       | ❌ Not suitable                         |
-| **Handling subroutes (`/dashboard/*`)** | ✅ `app.use("/dashboard", router);` | ❌ Use `app.get("/:subpath")` in router |
-| **Strict path matching**                | ❌ Avoid for specific paths         | ✅ `app.get("/dashboard", handler);`    |
-|  |
+### `extName` (Extension-based check)
 
-### 🔹 `app.use()`
+- Extracts the file extension using `path.extname(file.originalname)`.
+- Converts it to lowercase and checks if it matches the allowed types (`jpeg|jpg|png|gif`).
+- Relies on the **file name**, which can be manipulated by a user (e.g., renaming `malware.exe` to `image.png`).
 
-```js
-app.use("/dashboard", dashboardRoute);
-```
+### `mimeType` (MIME type-based check)
 
-✅ Matches:
+- Checks `file.mimetype`, which is set based on the file's actual content.
+- Ensures the file is truly an image and not just renamed.
+- More **reliable** than extension checking, as the MIME type is detected by the server.
 
-- `/dashboard`
-- `/dashboard/anything` (if `dashboardRoute` supports it)
+### Example:
 
-### 🔹 `app.get()`
+A file named `image.jpg` but containing non-image data might pass the `extName` check but fail the `mimeType` check.
 
-```js
-app.get("/dashboard", (req, res) => {
-  res.json({ message: "Dashboard Home" });
-});
-```
+### Best Practice:
 
-✅ Matches: `/dashboard`
-❌ Does NOT match: `/dashboard/anything`
-
-## 2️⃣ Why Does / Get Executed for Unknown Routes?
-
-**Your setup**:
-
-```js
-const route = [
-  { path: "/auth", handler: authRoute },
-  { path: "/dashboard", handler: dashboardRoute },
-  { path: "/", handler: (req, res) => res.json({ message: "working" }) },
-];
-
-module.exports = (app) => {
-  route.forEach((r) => app.use(r.path, r.handler));
-};
-```
-
-- If **`/dashboard/anything`** is not found in **`dashboardRoute`**, Express moves to the next route.
-- Since **`/`** is a catch-all route, it executes the **`/`** handler instead.
-
-## 3️⃣ How to Fix It?
-
-**Add a 404 handler at the end:**
-
-```js
-module.exports = (app) => {
-  route.forEach((r) => app.use(r.path, r.handler));
-
-  // 404 Middleware
-  app.use((req, res) => res.status(404).json({ error: "Route not found" }));
-};
-```
-
-✅ Now, unknown routes like `/dashboard/anything` return:
-
-```js
-{ "error": "Route not found" }
-```
-
-Instead of `{ "message": "working" }`.
+It is recommended to **use both checks together** for better security. 🚀

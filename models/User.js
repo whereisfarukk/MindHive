@@ -26,6 +26,10 @@ const userSchema = new Schema(
 
       // we are not making it required cause a profile can't be created before creating User
     },
+    profilePics: {
+      type: String,
+      default: "/uploads/user.png",
+    },
   },
   { timestamps: true }
 );
