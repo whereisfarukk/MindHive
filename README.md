@@ -1,23 +1,24 @@
-## Key Difference Between `extName` and `mimeType`
+### 📌 When to Use multipart/form-data and Why Multer is Necessary
 
-The key difference between `extName` and `mimeType` in your code is how they determine the file type:
+The `enctype="multipart/form-data"` attribute is used in HTML forms when you need to:
+✅ Upload **files** (e.g., images, documents)
+✅ Send **large amounts of binary data**
 
-### `extName` (Extension-based check)
+This encoding type ensures that the data is **split into multiple parts**, each part representing a **form field or file**. It is particularly useful for handling file uploads because it **preserves the integrity of binary data**.
 
-- Extracts the file extension using `path.extname(file.originalname)`.
-- Converts it to lowercase and checks if it matches the allowed types (`jpeg|jpg|png|gif`).
-- Relies on the **file name**, which can be manipulated by a user (e.g., renaming `malware.exe` to `image.png`).
+### ⚠️ Behavior Without Middleware
 
-### `mimeType` (MIME type-based check)
+If your form includes **file uploads** and you set:
 
-- Checks `file.mimetype`, which is set based on the file's actual content.
-- Ensures the file is truly an image and not just renamed.
-- More **reliable** than extension checking, as the MIME type is detected by the server.
+```js
+enctype = "multipart/form-data";
+```
 
-### Example:
+but if we do not use middleware like `multer` on the server side, the uploaded files **will not be processed correctly**.
 
-A file named `image.jpg` but containing non-image data might pass the `extName` check but fail the `mimeType` check.
+### 🚨 What Happens?
 
-### Best Practice:
+❌ The server receives an **empty object** (`req.body`).
+❌ No file data is available (`req.file` or `req.files` are `undefined`).
 
-It is recommended to **use both checks together** for better security. 🚀
+This occurs because **the server does not know how to parse the multipart data** without a **dedicated middleware**.

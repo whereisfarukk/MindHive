@@ -1,3 +1,4 @@
+const { render } = require("ejs");
 const Profile = require("../models/Profile");
 const User = require("../models/User");
 exports.dashboardGetController = async (req, res, next) => {
@@ -16,7 +17,7 @@ exports.createProfileGetController = async (req, res, next) => {
   try {
     let profile = await Profile.findOne({ user: req.user._id });
     if (profile) {
-      res.redirect("/dashboard/edit-profile");
+      return res.redirect("/dashboard/edit-profile");
     }
     res.render("pages/dashboard/create-profile");
   } catch (e) {
@@ -37,7 +38,11 @@ exports.createProfilePostController = async (req, res, next) => {
       user: req.user._id,
       title,
       bio,
-      profilePics: req.user.profilePics,
+      // profilepic: req.user.profilePics,
+      profilepic: req.file
+        ? `/uploads/${req.file.filename}`
+        : req.user.profilePics, // Store image path
+
       link: {
         website: website | "",
         facebook: facebook | "",
@@ -55,14 +60,39 @@ exports.createProfilePostController = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-  console.log(req.body);
   res.redirect("/dashboard");
 
   // next();
 };
-// exports.editProfileGetController=(req,res,next)=>{
-//   next();
-// }
-// exports.editProfilePostController=(req,res,next)=>{
-//   next();
-// }
+exports.editProfileGetController = async (req, res, next) => {
+  try {
+    let profile = await Profile.findOne({ user: req.user._id });
+    if (!profile) {
+      return res.redirect("/dashboard/create-profile");
+    }
+    res.render("pages/dashboard/edit-profile", { profile });
+  } catch (e) {
+    next(e);
+  }
+};
+exports.editProfilePostController = async (req, res, next) => {
+  try {
+    let profile = ({
+      title,
+      bio,
+      link: { website, facebook, twitter, github },
+    } = req.body);
+    if (req.file) {
+      //update the profile pic only when its uploaded.
+      profileUpdate.profilepic = `/uploads/${req.file.filename}`;
+    }
+    let updatedProfile = await Profile.findOneAndUpdate(
+      { user: req.user._id },
+      { $set: profile },
+      { new: true }
+    );
+    res.redirect("/dashboard");
+  } catch (e) {
+    next(e);
+  }
+};

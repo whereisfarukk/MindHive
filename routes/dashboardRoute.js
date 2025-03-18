@@ -16,7 +16,12 @@ router.post(
   upload.single("profilepic"),
   createProfilePostController
 );
-// router.get("/edit-profile");
-// router.post("/edit-profile");
+router.get("/edit-profile", isAuthenticated, editProfileGetController);
+router.post(
+  "/edit-profile",
+  isAuthenticated,
+  upload.single("profilepic"),
+  editProfilePostController
+);
 
 module.exports = router;
