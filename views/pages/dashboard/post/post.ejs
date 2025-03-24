@@ -3,6 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+
     <title>Posts</title>
     <style>
       /* General Reset */
@@ -21,10 +26,16 @@
         /* max-width: 1200px; */
         /* margin: 0 auto; */
       }
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        margin-bottom: 30px;
+        gap: 3rem;
+      }
 
       h1 {
         text-align: center;
-        margin-bottom: 30px;
         color: #333;
       }
 
@@ -37,6 +48,23 @@
       .post-container {
         padding-top: 20px;
       }
+      .create-post-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 20px; /* Add padding for rectangular shape */
+        background-color: #007bff; /* Background color */
+        color: white; /* Icon color */
+        text-decoration: none;
+        border-radius: 8px; /* Rounded corners */
+        font-size: 1rem; /* Icon size */
+        transition: background-color 0.3s ease; /* Smooth hover effect */
+      }
+
+      .create-post-icon:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+      }
+
       .card-content {
         display: flex;
         gap: 15px;
@@ -69,6 +97,21 @@
         color: #666;
         font-size: 1.2rem;
       }
+      .create-post-btn {
+        display: inline-block;
+        margin-bottom: 20px;
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+      }
+
+      .create-post-btn:hover {
+        background-color: #0056b3;
+      }
     </style>
   </head>
   <body>
@@ -76,7 +119,16 @@
       <div class="row">
         <%- include('../../../partials/sidebar') %>
         <div class="post-container">
-          <h1>All Posts</h1>
+          <div class="header">
+            <h1>All Posts</h1>
+            <a
+              href="/post/create"
+              class="create-post-icon"
+              title="Create a Post"
+            >
+              <i class="fas fa-plus"></i>
+            </a>
+          </div>
           <div class="card-content">
             <!-- Loop through each post and create a card -->
             <% if (posts && posts.length > 0) { %> <% posts.forEach(post => { %>

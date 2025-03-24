@@ -82,11 +82,35 @@
       #delete:hover {
         background: rgb(152, 2, 2);
       }
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        margin-right: 15px;
+        text-decoration: none;
+        color: #007bff;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+      }
+
+      .back-btn:hover {
+        color: #0056b3;
+        text-decoration: underline;
+      }
+
+      .back-btn i {
+        margin-right: 5px;
+        font-size: 1.2rem;
+      }
     </style>
   </head>
   <body>
     <div class="form-container">
-      <h2>Edit Post</h2>
+      <div>
+        <a href="/post" class="back-btn">
+          <i class="fas fa-arrow-left"></i> Back
+        </a>
+        <h2>Edit Post</h2>
+      </div>
       <form
         action="/post/edit/<%= post._id %>"
         method="POST"
