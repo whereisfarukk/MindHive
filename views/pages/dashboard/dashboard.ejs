@@ -8,48 +8,27 @@
       body {
         margin: 0;
         padding: 0;
-        display: flex;
         font-family: Arial, sans-serif;
         margin: 0;
       }
-      .sidebar {
-        width: 240px;
-        height: 100vh;
-        background: #343a40;
-        color: white;
-        padding: 20px;
-        position: fixed;
-      }
       .content {
-        margin-left: 270px;
-        padding: 20px;
-        width: 100%;
+        display: flex;
+      }
+      .main-content {
+        padding: 3rem;
+      }
+      P {
+        margin-top: 1rem;
       }
     </style>
   </head>
   <body>
-    <div class="sidebar">
-      <h2>Dashboard</h2>
-      <ul>
-        <li>
-          <a href="#" style="color: white; text-decoration: none">Home</a>
-        </li>
-        <li>
-          <a href="#" style="color: white; text-decoration: none">Profile</a>
-        </li>
-        <li>
-          <a href="#" style="color: white; text-decoration: none">Settings</a>
-        </li>
-        <li>
-          <a href="/auth/logout" style="color: white; text-decoration: none"
-            >Logout</a
-          >
-        </li>
-      </ul>
-    </div>
     <div class="content">
-      <h3>Welcome,</h3>
-      <p>This is your simple dashboard.</p>
+      <%- include('../../partials/sidebar') %>
+      <div class="main-content">
+        <h1>Welcome,</h1>
+        <p>This is your simple dashboard.</p>
+      </div>
     </div>
   </body>
 </html>

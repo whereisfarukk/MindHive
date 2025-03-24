@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Posts</title>
+    <style>
+      /* General Reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+      }
+
+      .container {
+        /* max-width: 1200px; */
+        /* margin: 0 auto; */
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #333;
+      }
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+      }
+      .post-container {
+        padding-top: 20px;
+      }
+      .card-content {
+        display: flex;
+        gap: 15px;
+      }
+
+      .card {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        height: fit-content;
+        padding: 15px;
+        transition: transform 0.2s ease-in-out;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+      }
+
+      .card-title {
+        font-size: 1.2rem;
+        color: #333;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .no-posts {
+        text-align: center;
+        color: #666;
+        font-size: 1.2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <%- include('../../../partials/sidebar') %>
+        <div class="post-container">
+          <h1>All Posts</h1>
+          <div class="card-content">
+            <!-- Loop through each post and create a card -->
+            <% if (posts && posts.length > 0) { %> <% posts.forEach(post => { %>
+            <div class="card">
+              <div class="card-body">
+                <!-- Post Title -->
+                <a href="/post/edit/<%= post._id%>"
+                  ><h5 class="card-title"><%= post.title %></h5></a
+                >
+              </div>
+            </div>
+            <% }); %> <% } else { %>
+            <p class="no-posts">No posts available.</p>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -5,11 +5,13 @@ const {
   createProfilePostController,
   editProfileGetController,
   editProfilePostController,
+  profileGetController,
 } = require("../controllers/dashboardController");
 const upload = require("../middleware/uploadMiddleware");
 const { isAuthenticated } = require("../middleware/authMiddleWare");
 
 router.get("/", isAuthenticated, dashboardGetController);
+router.get("/profile", profileGetController);
 router.get("/create-profile", isAuthenticated, createProfileGetController);
 router.post(
   "/create-profile",

@@ -12,6 +12,17 @@ exports.dashboardGetController = async (req, res, next) => {
     next(e);
   }
 };
+exports.profileGetController = async (req, res, next) => {
+  try {
+    let profile = await Profile.findOne({ user: req.user._id });
+    if (!profile) {
+      return res.redirect("/dashboard");
+    }
+    res.render("pages/dashboard/profile", { profile });
+  } catch (e) {
+    next(e);
+  }
+};
 
 exports.createProfileGetController = async (req, res, next) => {
   try {
