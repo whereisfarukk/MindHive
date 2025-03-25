@@ -2,7 +2,7 @@
 
 ## Code:
 
-```json
+```js
 let commentJSON = await Comment.findById(createdComment._id).populate({
   path: "user",
   select: "profilePics name",
