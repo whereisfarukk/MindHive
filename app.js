@@ -28,7 +28,7 @@ app.use((req, res, next) => {
   next(error);
 });
 app.use((error, req, res, next) => {
-  console.log(error);
+  // console.log(error);
   if (error.status === 404) {
     return res.render("pages/error/404");
   }

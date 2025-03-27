@@ -8,8 +8,8 @@ const {
 } = require("../controllers/commentController");
 
 const {
-  likeGetController,
-  dislikeGetController,
+  likePostController,
+  dislikePostController,
 } = require("../controllers/likeDislikeController");
 
 const { bookmarksgetController } = require("../controllers/bookmarkController");
@@ -23,8 +23,8 @@ router.post(
 );
 
 // like dislike route
-router.get("/likes/:postId", isAuthenticated, likeGetController);
-router.get("/dislike/:postId", isAuthenticated, dislikeGetController);
+router.post("/likes/:postId", isAuthenticated, likePostController);
+router.post("/dislikes/:postId", isAuthenticated, dislikePostController);
 
 //bookmarks route
 router.get("/bookmarks/:postId", isAuthenticated, bookmarksgetController);
