@@ -2,12 +2,21 @@ const { selectFields } = require("express-validator/lib/field-selection");
 const Post = require("../models/Post");
 const Profile = require("../models/Profile");
 const User = require("../models/User");
+const sanitizeHtml = require("sanitize-html");
+const sanitizePostContent = (html) => {
+  // This function converts Post body from html to plain text
+  return sanitizeHtml(html, {
+    allowedTags: false,
+    allowedAttributes: false,
+  });
+};
+
 exports.dashboardGetController = async (req, res, next) => {
   try {
     let profile = await Profile.findOne({ user: req.user._id });
     if (profile) {
       const posts = await Post.find();
-      console.log(posts);
+      // console.log(posts);
       return res.render("pages/dashboard/dashboard", { posts });
     }
     res.redirect("/dashboard/create-profile");
@@ -30,31 +39,19 @@ exports.singlePostGetController = async (req, res, next) => {
           },
           {
             path: "replies.user", // Populate the user who made the reply
-            select: "username profilePics",
+            select: "name profilePics",
           },
         ],
       });
-    // let post = await Post.findById(postId)
-    //   .populate("author", "name profilePics")
-    //   .populate({
-    //     path: "comments",
-    //     populate: {
-    //       path: "user",
-    //       select: "name profilePics",
-    //     },
-    //   })
-    //   .populate({
-    //     path: "comments",
-    //     populate: {
-    //       path: "replies.user",
-    //       select: "name profilePics",
-    //     },
-    //   });
+
     if (!post) {
       let error = new Error("404 page not found");
       error.status = 404;
       throw error;
     }
+
+    // console.log(post);
+    post.body = sanitizePostContent(post.body); // Clean the content
 
     res.render("pages/dashboard/singlePost", { post });
   } catch (e) {

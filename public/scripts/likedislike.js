@@ -1,4 +1,4 @@
-window.onload = function () {
+document.addEventListener("DOMContentLoaded", function () {
   const likebtn = document.getElementById("likeBtn");
 
   const dislikebtn = document.getElementById("dislikebtn");
@@ -47,4 +47,4 @@ window.onload = function () {
     });
     return fetch(req);
   }
-};
+});
